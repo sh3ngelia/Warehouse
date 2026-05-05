@@ -5,19 +5,11 @@ using System.Reflection;
 using Dapper;
 using Warehouse.Extension;
 using Warehouse.Extension.Attributes;
+using Warehouse.Repository.Interfaces;
 
-namespace Warehouse.Repository;
+namespace Warehouse.Repository.Repositories;
 
-public interface IRepository<T> where T : class
-{
-    T? Get(object id);
-    IEnumerable<T> Load(Expression<Func<T, bool>> expression);
-    int Insert(T entity);
-    void Update(T entity);
-    void Delete(object id);
-}
-
-public abstract class BaseRepository<T> : IRepository<T> where T : class
+public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly DbConnection _connection;
     private readonly string _entityName;

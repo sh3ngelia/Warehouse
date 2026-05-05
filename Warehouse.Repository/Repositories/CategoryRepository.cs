@@ -1,11 +1,8 @@
 ﻿using System.Data.Common;
 using Warehouse.DTO.Main;
+using Warehouse.Repository.Interfaces;
 
-namespace Warehouse.Repository;
-
-public interface ICategoryRepository : IRepository<CategoryDto>
-{
-}
+namespace Warehouse.Repository.Repositories;
 
 public sealed class CategoryRepository : BaseRepository<CategoryDto>, ICategoryRepository
 {
