@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>Warehouse.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{6563987d-c0a7-4481-ac03-64f9010c8b70}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Warehouse.Database</RootNamespace>
+    <AssemblyName>Warehouse.Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Stored Procedures\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\Roles.sql" />
+    <Build Include="dbo\Tables\ContractStatuses.sql" />
+    <Build Include="dbo\Tables\StorageStatuses.sql" />
+    <Build Include="dbo\Tables\Permissions.sql" />
+    <Build Include="dbo\Tables\Regions.sql" />
+    <Build Include="dbo\Tables\Cities.sql" />
+    <Build Include="dbo\Tables\Employees.sql" />
+    <Build Include="dbo\Tables\Users.sql" />
+    <Build Include="dbo\Tables\Customers.sql" />
+    <Build Include="dbo\Tables\LegalCustomers.sql" />
+    <Build Include="dbo\Tables\PhysicalCustomers.sql" />
+    <Build Include="dbo\Tables\Categories.sql" />
+    <Build Include="dbo\Tables\Products.sql" />
+    <Build Include="dbo\Tables\UserRoles.sql" />
+    <Build Include="dbo\Tables\RolePermissions.sql" />
+    <Build Include="dbo\Tables\LoginHistory.sql" />
+    <Build Include="dbo\Tables\Storages.sql" />
+    <Build Include="dbo\Tables\Contracts.sql" />
+    <Build Include="dbo\Tables\ContractDetails.sql" />
+    <Build Include="dbo\Tables\StorageDetails.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertPermission.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdatePermission.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeletePermission.sql" />
+    <Build Include="dbo\Stored Procedures\udp_AssignPermissionToRole.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UnassignPermissionFromRole.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UserLogin.sql" />
+    <Build Include="dbo\Stored Procedures\udp_LoginHistory.sql" />
+    <Build Include="dbo\Stored Procedures\udp_CreateEmployeeWithUser.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertRole.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateRole.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteRole.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetRoles.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertContractStatus.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateContractStatus.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteContractStatus.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertStorageStatus.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateStorageStatus.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteStorageStatus.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertRegion.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateRegion.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteRegion.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetRegions.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertCity.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateCity.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteCity.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetCities.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertCategory.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateCategory.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteCategory.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertEmployee.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateEmployee.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteEmployee.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetEmployees.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateUser.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteUser.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetUsers.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertCustomer.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateCustomer.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteCustomer.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetCustomers.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertLegalCustomer.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateLegalCustomer.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteLegalCustomer.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertPhysicalCustomer.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdatePhysicalCustomer.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeletePhysicalCustomer.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertProduct.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateProduct.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteProduct.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetProducts.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertStorage.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateStorage.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteStorage.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetStorages.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertContract.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteContract.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetContracts.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertContractDetail.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteContractDetail.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertStorageDetail.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteStorageDetail.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetCategories.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetContractDetails.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetPhysicalCustomers.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetLegalCustomers.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetLoginHistories.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetContractStatuses.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetPermissions.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetStorageDetails.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetStorageStatuses.sql" />
+  </ItemGroup>
+</Project>
