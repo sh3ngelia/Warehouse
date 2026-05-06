@@ -5,6 +5,7 @@ namespace Warehouse.DTO.Main;
 [DbTable("ContractDetails")]
 public class ContractDetailDto
 {
+    [IgnoreForInsert]
     public int ContractDetailId { get; set; }
     public int ContractId { get; set; }
     public int StorageId { get; set; }

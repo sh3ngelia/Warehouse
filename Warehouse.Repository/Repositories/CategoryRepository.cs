@@ -4,9 +4,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public sealed class CategoryRepository : BaseRepository<CategoryDto>, ICategoryRepository
+internal sealed class CategoryRepository : BaseRepository<CategoryDto>, ICategoryRepository
 {
-    public CategoryRepository(DbConnection connection) : base(connection)
+    public CategoryRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     } 
 }

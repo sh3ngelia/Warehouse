@@ -4,9 +4,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class StorageRepository : BaseRepository<StorageDto>, IStorageRepository
+internal class StorageRepository : BaseRepository<StorageDto>, IStorageRepository
 {
-    public StorageRepository(DbConnection connection) : base(connection)
+    public StorageRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

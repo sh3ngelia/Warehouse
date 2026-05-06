@@ -152,4 +152,8 @@
     <Build Include="dbo\Stored Procedures\udp_GetStorageDetails.sql" />
     <Build Include="dbo\Stored Procedures\udp_GetStorageStatuses.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Dev.Database.publish.xml" />
+    <None Include="Test.Database.publish.xml" />
+  </ItemGroup>
 </Project>

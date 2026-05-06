@@ -4,9 +4,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class PhysicalCustomerRepository : BaseRepository<PhysicalCustomerDto>, IPhysicalCustomerRepository
+internal class PhysicalCustomerRepository : BaseRepository<PhysicalCustomerDto>, IPhysicalCustomerRepository
 {
-    public PhysicalCustomerRepository(DbConnection connection) : base(connection)
+    public PhysicalCustomerRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

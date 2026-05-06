@@ -1,0 +1,100 @@
+using Warehouse.DTO.Lookups;
+
+namespace Warehouse.Test.Repositories;
+
+[TestFixture]
+public class RoleRepositoryTests : RepositoryTestBase
+{
+    [Test]
+    public void Insert_WithValidRole_ReturnsNewPositiveId()
+    {
+        // Arrange
+        // TODO: create a RoleDto with a unique Name
+
+        // Act
+        // TODO: call UnitOfWork.RoleRepository.Insert(dto)
+
+        // Assert
+        // TODO: Assert.That(id, Is.GreaterThan(0))
+        Assert.Ignore("TODO: implement");
+    }
+
+    [Test]
+    public void Get_WithExistingRoleId_ReturnsMatchingRole()
+    {
+        // Arrange
+        // TODO: insert a RoleDto, capture id
+
+        // Act
+        // TODO: call UnitOfWork.RoleRepository.Get(id)
+
+        // Assert
+        // TODO: Assert.That(result, Is.Not.Null)
+        // TODO: Assert.That(result!.Name, Is.EqualTo(expected name))
+        Assert.Ignore("TODO: implement");
+    }
+
+    [Test]
+    public void Get_WithNonExistingRoleId_ReturnsNull()
+    {
+        // Act
+        // TODO: call UnitOfWork.RoleRepository.Get(int.MaxValue)
+
+        // Assert
+        // TODO: Assert.That(result, Is.Null)
+        Assert.Ignore("TODO: implement");
+    }
+
+    [Test]
+    public void Load_ByRoleName_ReturnsOnlyMatchingRoles()
+    {
+        // Arrange
+        // TODO: insert two roles with distinct names
+
+        // Act
+        // TODO: call Load(r => r.Name == insertedName)
+
+        // Assert
+        // TODO: Assert.That(result, Has.Count.EqualTo(1))
+        Assert.Ignore("TODO: implement");
+    }
+
+    [Test]
+    public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
+    {
+        // Act
+        // TODO: call Load(r => r.Name == "__nonexistent__")
+
+        // Assert
+        // TODO: Assert.That(result, Is.Empty)
+        Assert.Ignore("TODO: implement");
+    }
+
+    [Test]
+    public void Update_WithChangedRoleName_PersistsNewName()
+    {
+        // Arrange
+        // TODO: insert a role, Get(id) to retrieve entity
+
+        // Act
+        // TODO: change Name, call Update(dto)
+
+        // Assert
+        // TODO: Get(id) and verify Name equals the new value
+        Assert.Ignore("TODO: implement");
+    }
+
+    [Test]
+    public void Delete_WithExistingRoleId_RemovesRoleFromDatabase()
+    {
+        // Arrange
+        // TODO: insert a role, capture id
+
+        // Act
+        // TODO: call Delete(id)
+
+        // Assert
+        // TODO: Get(id) and verify result is null
+        Assert.Ignore("TODO: implement");
+    }
+}

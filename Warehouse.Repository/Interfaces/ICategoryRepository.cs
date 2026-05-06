@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Warehouse.DTO.Main;
-using Warehouse.Repository.Repositories;
+﻿using Warehouse.DTO.Main;
 
-namespace Warehouse.Repository.Interfaces
+namespace Warehouse.Repository.Interfaces;
+
+public interface ICategoryRepository : IBaseRepository<CategoryDto>
 {
-    public interface ICategoryRepository : IBaseRepository<CategoryDto>
-    {
-    }
 }
-
-
-

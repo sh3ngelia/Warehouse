@@ -4,9 +4,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class LoginHistoryRepositopry : BaseRepository<LoginHistoryDto>, ILoginHistoryRepository
+internal class LoginHistoryRepositopry : BaseRepository<LoginHistoryDto>, ILoginHistoryRepository
 {
-    public LoginHistoryRepositopry(DbConnection connection) : base(connection)
+    public LoginHistoryRepositopry(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

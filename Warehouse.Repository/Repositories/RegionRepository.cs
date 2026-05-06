@@ -4,9 +4,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class RegionRepository : BaseRepository<RegionDto>, IRegionRepository
+internal class RegionRepository : BaseRepository<RegionDto>, IRegionRepository
 {
-    public RegionRepository(DbConnection connection) : base(connection)
+    public RegionRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

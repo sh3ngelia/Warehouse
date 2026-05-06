@@ -5,6 +5,7 @@ namespace Warehouse.DTO.Main;
 [DbTable("Storages")]
 public sealed class StorageDto
 {
+    [IgnoreForInsert]
     public int? StorageId { get; set; }
     public int Status { get; set; }
     public int CityId { get; set; }
@@ -13,7 +14,13 @@ public sealed class StorageDto
     public double Capacity { get; set; }
     public string Address { get; set; } = default!;
     public decimal Price { get; set; }
+    [IgnoreForInsert]
+    [IgnoreForUpdate]
     public DateTime? CreateDate { get; set; }
+    [IgnoreForInsert]
+    [IgnoreForUpdate]
     public DateTime? UpdateDate { get; set; }
+    [IgnoreForInsert]
+    [IgnoreForUpdate]
     public bool? IsDeleted { get; set; }
 }

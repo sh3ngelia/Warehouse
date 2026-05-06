@@ -4,9 +4,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class EmployeeRepository : BaseRepository<EmployeeDto>, IEmployeeRepository
+internal class EmployeeRepository : BaseRepository<EmployeeDto>, IEmployeeRepository
 {
-    public EmployeeRepository(DbConnection connection) : base(connection)
+    public EmployeeRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

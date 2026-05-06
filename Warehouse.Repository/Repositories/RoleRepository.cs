@@ -5,9 +5,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class RoleRepository : BaseRepository<RoleDto>, IRoleRepository
+internal class RoleRepository : BaseRepository<RoleDto>, IRoleRepository
 {
-    public RoleRepository(DbConnection connection) : base(connection)
+    public RoleRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

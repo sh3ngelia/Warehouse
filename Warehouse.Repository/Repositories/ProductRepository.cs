@@ -4,9 +4,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class ProductRepository : BaseRepository<ProductDto>, IProductRepository
+internal class ProductRepository : BaseRepository<ProductDto>, IProductRepository
 {
-    public ProductRepository(DbConnection connection) : base(connection)
+    public ProductRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

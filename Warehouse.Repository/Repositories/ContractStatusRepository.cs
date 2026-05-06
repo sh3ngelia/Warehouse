@@ -4,9 +4,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class ContractStatusRepository : BaseRepository<ContractStatusDto>, IContractStatusRepository
+internal class ContractStatusRepository : BaseRepository<ContractStatusDto>, IContractStatusRepository
 {
-    public ContractStatusRepository(DbConnection connection) : base(connection)
+    public ContractStatusRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

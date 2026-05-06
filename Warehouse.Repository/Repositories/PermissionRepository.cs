@@ -5,9 +5,9 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class PermissionRepository : BaseRepository<PermissionDto>, IPermissionRepository
+internal class PermissionRepository : BaseRepository<PermissionDto>, IPermissionRepository
 {
-    public PermissionRepository(DbConnection connection) : base(connection)
+    public PermissionRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

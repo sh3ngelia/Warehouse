@@ -9,15 +9,17 @@ using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
+internal abstract class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly DbConnection _connection;
     private readonly string _entityName;
     private readonly string _tableName;
+    private readonly Func<DbTransaction?> _transactionProvider;
 
-    protected BaseRepository(DbConnection connection)
+    protected BaseRepository(DbConnection connection, Func<DbTransaction?> transactionProvider)
     {
         _connection = connection ?? throw new ArgumentNullException(nameof(connection));
+        _transactionProvider = transactionProvider ?? throw new ArgumentNullException(nameof(transactionProvider));
         _entityName = typeof(T).Name.Replace("Dto", string.Empty);
 
         if (typeof(T)
@@ -33,7 +35,8 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
 
         return _connection.QueryFirstOrDefault<T>(
             $"udp_Get{_tableName}",
-            new { Id = id },
+            new Dictionary<string, object>{{ $"{_entityName}Id", id }},
+            transaction: _transactionProvider(),
             commandType: CommandType.StoredProcedure);
     }
 
@@ -43,7 +46,7 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
         var sql = $"SELECT * FROM {_tableName} WHERE {whereQuery}";
         var dynamicParameters = new DynamicParameters(parameters);
 
-        return _connection.Query<T>(sql, dynamicParameters);
+        return _connection.Query<T>(sql, dynamicParameters, transaction: _transactionProvider());
     }
 
     public int Insert(T entity)
@@ -53,23 +56,16 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
         var properties = typeof(T).GetProperties();
         var parameters = new DynamicParameters();
 
-        AssignInsertParameters(entity, properties, parameters);
-        _connection.Execute($"udp_Insert{_entityName}", parameters, commandType: CommandType.StoredProcedure);
+        AssignParameters<IgnoreForInsertAttribute>(entity, properties, parameters);
+        parameters.Add($"@{_entityName}Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+        _connection.Execute(
+            $"udp_Insert{_entityName}", 
+            parameters, 
+            transaction: _transactionProvider(), 
+            commandType: CommandType.StoredProcedure);
 
         return parameters.Get<int>($"@{_entityName}Id");
-    }
-
-    private void AssignInsertParameters(T entity, PropertyInfo[] properties, DynamicParameters parameters)
-    {
-        foreach (var property in properties)
-        {
-            if (Attribute.IsDefined(property, typeof(IgnoreForInsertAttribute)))
-                continue;
-            var value = property.GetValue(entity);
-            parameters.Add($"@{property.Name}", value);
-        }
-
-        parameters.Add($"@{_entityName}Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
     }
 
     public void Update(T entity)
@@ -77,20 +73,29 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
         var properties = typeof(T).GetProperties();
         var parameters = new DynamicParameters();
 
-        AssignUpdateParameters(entity, properties, parameters);
-        _connection.Execute($"udp_Update{_entityName}", parameters, commandType: CommandType.StoredProcedure);
+        AssignParameters<IgnoreForUpdateAttribute>(entity, properties, parameters);
+
+        _connection.Execute(
+            $"udp_Update{_entityName}", 
+            parameters,
+            transaction: _transactionProvider(),
+            commandType: CommandType.StoredProcedure);
     }
 
-    private static void AssignUpdateParameters(T entity, PropertyInfo[] properties, DynamicParameters parameters)
+    public void Delete(object id) =>
+        _connection.Execute(
+            $"udp_Delete{_entityName}",
+            new Dictionary<string, object> { { $"{_entityName}Id", id } },
+            transaction: _transactionProvider(),
+            commandType: CommandType.StoredProcedure);
+
+    private static void AssignParameters<TAttribute>(T entity, PropertyInfo[] properties, DynamicParameters parameters) where TAttribute : Attribute
     {
         foreach (var property in properties)
         {
-            if (Attribute.IsDefined(property, typeof(IgnoreForUpdateAttribute)))
+            if (Attribute.IsDefined(property, typeof(TAttribute)))
                 continue;
             parameters.Add($"@{property.Name}", property.GetValue(entity));
         }
     }
-
-    public void Delete(object id) =>
-        _connection.Execute($"udp_Delete{_entityName}", new { id }, commandType: CommandType.StoredProcedure);
 }

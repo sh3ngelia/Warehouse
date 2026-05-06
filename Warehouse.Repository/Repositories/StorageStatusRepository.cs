@@ -1,12 +1,12 @@
 ﻿using System.Data.Common;
-using Warehouse.DTO.Main;
+using Warehouse.DTO.Lookups;
 using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;
 
-public class StorageStatusRepository : BaseRepository<StorageStatusDto>, IStorageStatusRepository
+internal class StorageStatusRepository : BaseRepository<StorageStatusDto>, IStorageStatusRepository
 {
-    public StorageStatusRepository(DbConnection connection) : base(connection)
+    public StorageStatusRepository(DbConnection connection, Func<DbTransaction?> transaction) : base(connection, transaction)
     {
     }
 }

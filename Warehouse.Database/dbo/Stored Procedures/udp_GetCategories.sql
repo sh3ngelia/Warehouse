@@ -1,8 +1,8 @@
 ﻿create procedure udp_GetCategories
-	@CategoryID int 
+	@CategoryId int 
 as
 begin
 	set nocount on;
-	select * from Categories where CategoryID = @CategoryID
+	select * from Categories where CategoryId = @CategoryId
 	and IsDeleted = 0;
 end
