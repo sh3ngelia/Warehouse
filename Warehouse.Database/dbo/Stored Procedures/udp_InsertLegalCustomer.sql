@@ -1,36 +1,30 @@
-﻿-- Legalcustomers
-
-create procedure udp_InsertLegalCustomer
+﻿create procedure udp_InsertLegalCustomer
+    @CustomerId int output,
     @Name nvarchar(30),
-    @Address varchar(100),
-    @LegalCustomerId int output
-as
+    @Address varchar(100)
+    as
 begin
     set nocount on;
 
-    begin try
+begin try
+    if @CustomerId is null
+            raiserror('CustomerId cannot be null.', 16, 1);
 
-        if @Name is null or ltrim(rtrim(@Name)) = ''
-            raiserror('Legal customer name cannot be empty.', 16, 1);
+    if @Name is null or ltrim(rtrim(@Name)) = ''
+        raiserror('Legal customer name cannot be empty.', 16, 1);
 
-        if @Address is null or ltrim(rtrim(@Address)) = ''
-            raiserror('Legal customer address cannot be empty.', 16, 1);
+    if @Address is null or ltrim(rtrim(@Address)) = ''
+        raiserror('Legal customer address cannot be empty.', 16, 1);
 
-        if exists (select 1 from LegalCustomers lc
-                   join Customers c on lc.CustomerId = c.CustomerId
-                   where lc.Name = @Name and c.IsDeleted = 0)
+begin tran;
 
-        begin tran;
+insert into dbo.LegalCustomers (CustomerId, [Name], [Address])
+values (@CustomerId, @Name, @Address);
 
-        insert into LegalCustomers ([Name], [Address])
-        values (@Name, @Address);
-        set @LegalCustomerId = scope_identity();
-
-        commit;
-        return 0;
-    end try
-    begin catch
-        if @@trancount > 0 rollback;
+commit;
+end try
+begin catch
+if @@trancount > 0 rollback;
         throw;
-    end catch
+end catch
 end

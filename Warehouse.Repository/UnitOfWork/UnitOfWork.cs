@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System.Data;
+using System.Data.Common;
 using System.Runtime.CompilerServices;
 using Warehouse.Repository.Interfaces;
 using Warehouse.Repository.Repositories;
@@ -10,6 +11,7 @@ public sealed class UnitOfWork : IUnitOfWork
     private readonly DbConnection _connection;
     private DbTransaction? _transaction;
     private bool _disposed;
+    private bool _wasOpend = true;
 
     #region Repository Fields
 
@@ -84,6 +86,11 @@ public sealed class UnitOfWork : IUnitOfWork
     {
         if (_transaction != null)
             throw new InvalidOperationException("A transaction is already in progress.");
+        if (_connection.State == ConnectionState.Closed)
+        {
+            _connection.Open();
+            _wasOpend = false;
+        }
         _transaction = _connection.BeginTransaction();
     }
 
@@ -107,6 +114,11 @@ public sealed class UnitOfWork : IUnitOfWork
         action();
         _transaction.Dispose();
         _transaction = null;
+        if (!_wasOpend)
+        {
+            _connection.Close();
+            _wasOpend = true;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

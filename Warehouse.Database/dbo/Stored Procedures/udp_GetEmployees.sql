@@ -4,9 +4,8 @@ as
 begin
     set nocount on;
 
-    select *
-    from Employees
-    where EmployeeId = @EmployeeId
-       and IsDeleted = 0;
-   
+select *
+from Employees
+where EmployeeId = @EmployeeId
+  and IsDeleted = 0;
 end

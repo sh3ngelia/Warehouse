@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -21,11 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Warehouse.Repository\Warehouse.Repository.csproj" />
+	  <ProjectReference Include="..\Warehouse.Repository\Warehouse.Repository.csproj" PrivateAssets="all"/>  </ItemGroup>
+  <ItemGroup>
+    <Using Include="NUnit.Framework" />
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="NUnit.Framework" />
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

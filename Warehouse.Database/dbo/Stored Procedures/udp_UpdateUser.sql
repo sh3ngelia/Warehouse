@@ -1,45 +1,39 @@
-﻿-- Users
-
-create procedure udp_UpdateUser
+﻿create procedure udp_UpdateUser
     @EmployeeId int,
-    @NewUsername varchar(40)
+    @Username varchar(40),
+    @Password varbinary(256)
 as
 begin
     set nocount on;
 
-    begin try
-        if @EmployeeId is null or @EmployeeId <= 0
-            raiserror('EmployeeId must be a positive integer.', 16, 1);
+begin try
+if @EmployeeId is null
+            raiserror('EmployeeId cannot be null.', 16, 1);
 
-        if @NewUsername is null or ltrim(rtrim(@NewUsername)) = ''
+        if @Username is null or ltrim(rtrim(@Username)) = ''
             raiserror('Username cannot be empty.', 16, 1);
 
-        if not exists (select 1 from Users where EmployeeId = @EmployeeId and IsDeleted = 0)
+        if @Password is null
+            raiserror('Password cannot be null.', 16, 1);
+
+        if not exists (select 1 from dbo.Users where EmployeeId = @EmployeeId)
             raiserror('User not found.', 16, 1);
 
-        -- Check Username uniqueness (excluding current record)
-        if exists (select 1 from Users where Username = @NewUsername and EmployeeId != @EmployeeId and IsDeleted = 0)
-        begin
-            raiserror('User with this Username already exists.', 16, 1);
-            return 1;
-        end
+        if exists (
+            select 1 from dbo.Users
+            where Username = @Username
+              and EmployeeId <> @EmployeeId
+              and IsDeleted = 0
+        )
+            raiserror('Username already exists.', 16, 1);
 
-        begin tran;
-
-        update Users
-        set Username = ltrim(rtrim(@EmployeeId)),
-            UpdateDate = getdate()
-        where EmployeeId = @EmployeeId
-          and IsDeleted = 0;
-
-        if @@rowcount = 0
-            raiserror('User not found.', 16, 1);
-
-        commit;
-        return 0;
-    end try
-    begin catch
-        if @@trancount > 0 rollback;
-        throw;
-    end catch
+update dbo.Users
+set Username = @Username,
+    Password = @Password,
+    UpdateDate = getdate()
+where EmployeeId = @EmployeeId;
+end try
+begin catch
+throw;
+end catch
 end

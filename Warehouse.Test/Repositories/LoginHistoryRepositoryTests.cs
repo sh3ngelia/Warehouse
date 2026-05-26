@@ -1,88 +1,160 @@
+using System.Linq;
 using System.Text;
-using Warehouse.DTO.Main;
+using Warehouse.DTO.Users;
 
 namespace Warehouse.Test.Repositories;
 
 [TestFixture]
 public class LoginHistoryRepositoryTests : RepositoryTestBase
 {
-    [Test]
-    public void Insert_WithValidLoginHistory_ReturnsNewPositiveId()
-    {
-        // Arrange
-        // TODO: insert Employee + User to get a valid UserId (Users.EmployeeId is the FK)
-        // TODO: create a LoginHistoryDto with that UserId and LoginAt = DateTime.UtcNow
+    //[Test]
+    //public void Insert_WithValidLoginHistory_ReturnsNewPositiveId()
+    //{
+    //    // Arrange
+    //    var employeeId = UnitOfWork.EmployeeRepository.Insert(new EmployeeDto
+    //    {
+    //        PersonalId = Guid.NewGuid().ToString("N")[..11],
+    //        FirstName = "Login",
+    //        LastName = "User",
+    //        Phone = "5" + Guid.NewGuid().ToString("N")[..11],
+    //        Email = $"e{Guid.NewGuid():N}"[..10] + "@t.com"
+    //    });
 
-        // Act
-        // TODO: call UnitOfWork.LoginHistoryRepository.Insert(dto)
+    //    var userId = UnitOfWork.UserRepository.Insert(new UserDto
+    //    {
+    //        EmployeeId = employeeId,
+    //        Username = "user_" + Guid.NewGuid().ToString("N")[..8],
+    //        Password = Encoding.UTF8.GetBytes("testpassword")
+    //    });
 
-        // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
-    }
+    //    var dto = new LoginHistoryDto
+    //    {
+    //        UserId = userId,
+    //        LoginAt = DateTime.UtcNow
+    //    };
 
-    [Test]
-    public void Get_WithExistingLoginHistoryId_ReturnsMatchingRecord()
-    {
-        // Arrange
-        // TODO: insert Employee + User + LoginHistory, capture loginHistoryId
+    //    // Act
+    //    var id = UnitOfWork.LoginHistoryRepository.Insert(dto);
 
-        // Act
-        // TODO: call UnitOfWork.LoginHistoryRepository.Get(loginHistoryId)
+    //    // Assert
+    //    Assert.That(id, Is.GreaterThan(0));
+    //}
 
-        // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.UserId, Is.EqualTo(expected userId))
-        Assert.Ignore("TODO: implement");
-    }
+    //[Test]
+    //public void Get_WithExistingLoginHistoryId_ReturnsMatchingRecord()
+    //{
+    //    // Arrange
+    //    var employeeId = UnitOfWork.EmployeeRepository.Insert(new EmployeeDto
+    //    {
+    //        PersonalId = Guid.NewGuid().ToString("N")[..11],
+    //        FirstName = "Login",
+    //        LastName = "User",
+    //        Phone = "5" + Guid.NewGuid().ToString("N")[..11],
+    //        Email = $"e{Guid.NewGuid():N}"[..10] + "@t.com"
+    //    });
 
-    [Test]
-    public void Get_WithNonExistingLoginHistoryId_ReturnsNull()
-    {
-        // Act
-        // TODO: call UnitOfWork.LoginHistoryRepository.Get(int.MaxValue)
+    //    var userId = UnitOfWork.UserRepository.Insert(new UserDto
+    //    {
+    //        EmployeeId = employeeId,
+    //        Username = "user_" + Guid.NewGuid().ToString("N")[..8],
+    //        Password = Encoding.UTF8.GetBytes("testpassword")
+    //    });
 
-        // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
-    }
+    //    var loginHistoryId = UnitOfWork.LoginHistoryRepository.Insert(new LoginHistoryDto
+    //    {
+    //        UserId = userId,
+    //        LoginAt = DateTime.UtcNow
+    //    });
 
-    [Test]
-    public void Load_ByUserId_ReturnsAllLoginEntriesForThatUser()
-    {
-        // Arrange
-        // TODO: insert Employee + User, then insert two LoginHistory records for same UserId
+    //    // Act
+    //    var result = UnitOfWork.LoginHistoryRepository.Get(loginHistoryId);
 
-        // Act
-        // TODO: call Load(lh => lh.UserId == userId)
+    //    // Assert
+    //    Assert.That(result, Is.Not.Null);
+    //    Assert.That(result!.UserId, Is.EqualTo(userId));
+    //}
 
-        // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(2))
-        Assert.Ignore("TODO: implement");
-    }
+    //[Test]
+    //public void Get_WithNonExistingLoginHistoryId_ReturnsNull()
+    //{
+    //    // Act
+    //    var result = UnitOfWork.LoginHistoryRepository.Get(int.MaxValue);
 
-    [Test]
-    public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
-    {
-        // Act
-        // TODO: call Load(lh => lh.UserId == int.MaxValue)
+    //    // Assert
+    //    Assert.That(result, Is.Null);
+    //}
 
-        // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
-    }
+    //[Test]
+    //public void Load_ByUserId_ReturnsAllLoginEntriesForThatUser()
+    //{
+    //    // Arrange
+    //    var employeeId = UnitOfWork.EmployeeRepository.Insert(new EmployeeDto
+    //    {
+    //        PersonalId = Guid.NewGuid().ToString("N")[..11],
+    //        FirstName = "Login",
+    //        LastName = "User",
+    //        Phone = "5" + Guid.NewGuid().ToString("N")[..11],
+    //        Email = $"e{Guid.NewGuid():N}"[..10] + "@t.com"
+    //    });
 
-    [Test]
-    public void Delete_WithExistingLoginHistoryId_RemovesRecordFromDatabase()
-    {
-        // Arrange
-        // TODO: insert Employee + User + LoginHistory, capture id
+    //    var userId = UnitOfWork.UserRepository.Insert(new UserDto
+    //    {
+    //        EmployeeId = employeeId,
+    //        Username = "user_" + Guid.NewGuid().ToString("N")[..8],
+    //        Password = Encoding.UTF8.GetBytes("testpassword")
+    //    });
 
-        // Act
-        // TODO: call Delete(id)
+    //    UnitOfWork.LoginHistoryRepository.Insert(new LoginHistoryDto { UserId = userId, LoginAt = DateTime.UtcNow });
+    //    UnitOfWork.LoginHistoryRepository.Insert(new LoginHistoryDto { UserId = userId, LoginAt = DateTime.UtcNow.AddMinutes(1) });
 
-        // Assert
-        // TODO: Get(id) and verify result is null
-        Assert.Ignore("TODO: implement");
-    }
+    //    // Act
+    //    var result = UnitOfWork.LoginHistoryRepository.Load(lh => lh.UserId == userId).ToList();
+
+    //    // Assert
+    //    Assert.That(result, Has.Count.EqualTo(2));
+    //}
+
+    //[Test]
+    //public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
+    //{
+    //    // Act
+    //    var result = UnitOfWork.LoginHistoryRepository.Load(lh => lh.UserId == int.MaxValue).ToList();
+
+    //    // Assert
+    //    Assert.That(result, Is.Empty);
+    //}
+
+    //[Test]
+    //public void Delete_WithExistingLoginHistoryId_RemovesRecordFromDatabase()
+    //{
+    //    // Arrange
+    //    var employeeId = UnitOfWork.EmployeeRepository.Insert(new EmployeeDto
+    //    {
+    //        PersonalId = Guid.NewGuid().ToString("N")[..11],
+    //        FirstName = "Login",
+    //        LastName = "User",
+    //        Phone = "5" + Guid.NewGuid().ToString("N")[..11],
+    //        Email = $"e{Guid.NewGuid():N}"[..10] + "@t.com"
+    //    });
+
+    //    var userId = UnitOfWork.UserRepository.Insert(new UserDto
+    //    {
+    //        EmployeeId = employeeId,
+    //        Username = "user_" + Guid.NewGuid().ToString("N")[..8],
+    //        Password = Encoding.UTF8.GetBytes("testpassword")
+    //    });
+
+    //    var id = UnitOfWork.LoginHistoryRepository.Insert(new LoginHistoryDto
+    //    {
+    //        UserId = userId,
+    //        LoginAt = DateTime.UtcNow
+    //    });
+
+    //    // Act
+    //    UnitOfWork.LoginHistoryRepository.Delete(id);
+
+    //    // Assert
+    //    var result = UnitOfWork.LoginHistoryRepository.Get(id);
+    //    Assert.That(result, Is.Null);
+    //}
 }

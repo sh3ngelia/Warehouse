@@ -1,3 +1,4 @@
+using System.Linq;
 using Warehouse.DTO.Lookups;
 
 namespace Warehouse.Test.Repositories;
@@ -9,92 +10,96 @@ public class RoleRepositoryTests : RepositoryTestBase
     public void Insert_WithValidRole_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: create a RoleDto with a unique Name
+        var dto = new RoleDto
+        {
+            Name = "Role_" + Guid.NewGuid().ToString("N")[..8]
+        };
 
         // Act
-        // TODO: call UnitOfWork.RoleRepository.Insert(dto)
+        var id = UnitOfWork.RoleRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingRoleId_ReturnsMatchingRole()
     {
         // Arrange
-        // TODO: insert a RoleDto, capture id
+        const int id = 1;
+        const string expectedName = "Admin";
 
         // Act
-        // TODO: call UnitOfWork.RoleRepository.Get(id)
+        var result = UnitOfWork.RoleRepository.Get(id);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Name, Is.EqualTo(expected name))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Name, Is.EqualTo(expectedName));
     }
 
     [Test]
     public void Get_WithNonExistingRoleId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.RoleRepository.Get(int.MaxValue)
+        var result = UnitOfWork.RoleRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByRoleName_ReturnsOnlyMatchingRoles()
     {
         // Arrange
-        // TODO: insert two roles with distinct names
+        const string roleName = "Manager";
 
         // Act
-        // TODO: call Load(r => r.Name == insertedName)
+        var result = UnitOfWork.RoleRepository.Load(r => r.Name == roleName).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result.First().Name, Is.EqualTo(roleName));
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
         // Act
-        // TODO: call Load(r => r.Name == "__nonexistent__")
+        var result = UnitOfWork.RoleRepository.Load(r => r.Name == "__nonexistent__").ToList();
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 
     [Test]
     public void Update_WithChangedRoleName_PersistsNewName()
     {
         // Arrange
-        // TODO: insert a role, Get(id) to retrieve entity
+        var dto = UnitOfWork.RoleRepository.Get(3); // Employee
+        Assert.That(dto, Is.Not.Null);
+
+        dto!.Name = "Employee_Updated";
 
         // Act
-        // TODO: change Name, call Update(dto)
+        UnitOfWork.RoleRepository.Update(dto);
 
         // Assert
-        // TODO: Get(id) and verify Name equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.RoleRepository.Get(3);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.Name, Is.EqualTo("Employee_Updated"));
     }
 
     [Test]
     public void Delete_WithExistingRoleId_RemovesRoleFromDatabase()
     {
         // Arrange
-        // TODO: insert a role, capture id
+        const int id = 5; // Viewer
 
         // Act
-        // TODO: call Delete(id)
+        UnitOfWork.RoleRepository.Delete(id);
 
         // Assert
-        // TODO: Get(id) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.RoleRepository.Get(id);
+        Assert.That(result, Is.Null);
     }
 }

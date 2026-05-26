@@ -1,4 +1,4 @@
-using Warehouse.DTO.Main;
+using Warehouse.DTO.Contracts;
 
 namespace Warehouse.Test.Repositories;
 
@@ -9,109 +9,81 @@ public class ContractRepositoryTests : RepositoryTestBase
     public void Insert_WithValidContract_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: insert a CustomerDto to get a valid CustomerId
-        // TODO: insert an EmployeeDto to get a valid EmployeeId
-        // TODO: insert a ContractStatusDto to confirm at least one status exists (or use an existing known id)
-        // TODO: create a ContractDto with those FK values and ContractStatus = known status byte
+        var dto = new ContractDto
+        {
+            CustomerId = 1,
+            EmployeeId = 1,
+            ContractStatus = 1
+        };
 
         // Act
-        // TODO: call UnitOfWork.ContractRepository.Insert(dto)
+        var id = UnitOfWork.ContractRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingContractId_ReturnsMatchingContract()
     {
         // Arrange
-        // TODO: insert Customer + Employee + Contract, capture contractId
+        const int contractId = 1;
 
         // Act
-        // TODO: call UnitOfWork.ContractRepository.Get(contractId)
+        var result = UnitOfWork.ContractRepository.Get(contractId);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.CustomerId, Is.EqualTo(expected customerId))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.CustomerId, Is.EqualTo(1));
+        Assert.That(result.EmployeeId, Is.EqualTo(1));
+        Assert.That(result.ContractStatus, Is.EqualTo((byte)2));
     }
 
     [Test]
     public void Get_WithNonExistingContractId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.ContractRepository.Get(int.MaxValue)
+        var result = UnitOfWork.ContractRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByCustomerId_ReturnsAllContractsForThatCustomer()
     {
         // Arrange
-        // TODO: insert Customer + Employee + two Contracts linked to the same CustomerId
+        const int customerId = 1;
 
         // Act
-        // TODO: call Load(c => c.CustomerId == customerId)
+        var result = UnitOfWork.ContractRepository.Load(c => c.CustomerId == customerId).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(2))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result.All(c => c.CustomerId == customerId), Is.True);
     }
 
     [Test]
     public void Load_ByEmployeeId_ReturnsAllContractsManagedByThatEmployee()
     {
         // Arrange
-        // TODO: insert Customer + Employee + two Contracts linked to the same EmployeeId
+        const int employeeId = 1;
 
         // Act
-        // TODO: call Load(c => c.EmployeeId == employeeId)
+        var result = UnitOfWork.ContractRepository.Load(c => c.EmployeeId == employeeId).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(2))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result.All(c => c.EmployeeId == employeeId), Is.True);
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
         // Act
-        // TODO: call Load(c => c.ContractId == int.MaxValue)
+        var result = UnitOfWork.ContractRepository.Load(c => c.ContractId == int.MaxValue).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
-    }
-
-    [Test]
-    public void Update_WithChangedContractStatus_PersistsNewStatus()
-    {
-        // Arrange
-        // TODO: insert Customer + Employee + Contract, Get(contractId) to retrieve entity
-
-        // Act
-        // TODO: change ContractStatus, call Update(dto)
-
-        // Assert
-        // TODO: Get(contractId) and verify ContractStatus equals the new value
-        Assert.Ignore("TODO: implement");
-    }
-
-    [Test]
-    public void Delete_WithExistingContractId_RemovesContractFromDatabase()
-    {
-        // Arrange
-        // TODO: insert Customer + Employee + Contract, capture contractId
-
-        // Act
-        // TODO: call Delete(contractId)
-
-        // Assert
-        // TODO: Get(contractId) and verify result is null
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 }

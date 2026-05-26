@@ -1,4 +1,6 @@
-using Warehouse.DTO.Main;
+using System.Linq;
+using Warehouse.DTO.Customer;
+using Warehouse.DTO.Locations;
 
 namespace Warehouse.Test.Repositories;
 
@@ -9,82 +11,95 @@ public class LegalCustomerRepositoryTests : RepositoryTestBase
     public void Insert_WithValidLegalCustomer_ReturnsCustomerId()
     {
         // Arrange
-        // TODO: insert a CustomerDto with CustomerType = true (legal) to get a valid CustomerId
-        // TODO: create a LegalCustomerDto using that CustomerId, with Name and Address
+        var customerId = UnitOfWork.CustomerRepository.Insert(new CustomerDto
+        {
+            CustomerType = true,
+            Phone = "5" + Guid.NewGuid().ToString("N")[..11],
+            Email = $"l{Guid.NewGuid():N}"[..10] + "@t.com"
+        });
+
+        var dto = new LegalCustomerDto
+        {
+            CustomerId = customerId,
+            Name = "Legal_" + Guid.NewGuid().ToString("N")[..8],
+            Address = "Address_" + Guid.NewGuid().ToString("N")[..8]
+        };
 
         // Act
-        // TODO: call UnitOfWork.LegalCustomerRepository.Insert(dto)
+        var id = UnitOfWork.LegalCustomerRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingCustomerId_ReturnsMatchingLegalCustomer()
     {
         // Arrange
-        // TODO: insert Customer + LegalCustomer, capture customerId
+        const int customerId = 3;
+        const string expectedName = "TechCorp";
 
         // Act
-        // TODO: call UnitOfWork.LegalCustomerRepository.Get(customerId)
+        var result = UnitOfWork.LegalCustomerRepository.Get(customerId);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Name, Is.EqualTo(expected name))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Name, Is.EqualTo(expectedName));
     }
 
     [Test]
     public void Get_WithNonExistingCustomerId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.LegalCustomerRepository.Get(int.MaxValue)
+        var result = UnitOfWork.LegalCustomerRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByCompanyName_ReturnsOnlyMatchingLegalCustomers()
     {
         // Arrange
-        // TODO: insert two Customer + LegalCustomer pairs with distinct company names
+        const string companyName = "TechCorp";
 
         // Act
-        // TODO: call Load(l => l.Name == insertedName)
+        var result = UnitOfWork.LegalCustomerRepository.Load(l => l.Name == companyName).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result.First().Name, Is.EqualTo(companyName));
     }
 
     [Test]
     public void Update_WithChangedAddress_PersistsNewAddress()
     {
         // Arrange
-        // TODO: insert Customer + LegalCustomer, Get(customerId) to retrieve entity
+        var dto = UnitOfWork.LegalCustomerRepository.Get(3); // LogisticsPro
+        Assert.That(dto, Is.Not.Null);
+
+        dto!.Address = "Updated Legal Address";
 
         // Act
-        // TODO: change Address, call Update(dto)
+        UnitOfWork.LegalCustomerRepository.Update(dto);
 
         // Assert
-        // TODO: Get(customerId) and verify Address equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.LegalCustomerRepository.Get(3);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.Address, Is.EqualTo("Updated Legal Address"));
     }
 
     [Test]
     public void Delete_WithExistingCustomerId_RemovesLegalCustomerFromDatabase()
     {
         // Arrange
-        // TODO: insert Customer + LegalCustomer, capture customerId
+        const int customerId = 4;
 
         // Act
-        // TODO: call Delete(customerId)
+        UnitOfWork.LegalCustomerRepository.Delete(customerId);
 
         // Assert
-        // TODO: Get(customerId) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.LegalCustomerRepository.Get(customerId);
+        Assert.That(result, Is.Null);
     }
 }

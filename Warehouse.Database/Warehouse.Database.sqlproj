@@ -151,9 +151,22 @@
     <Build Include="dbo\Stored Procedures\udp_GetPermissions.sql" />
     <Build Include="dbo\Stored Procedures\udp_GetStorageDetails.sql" />
     <Build Include="dbo\Stored Procedures\udp_GetStorageStatuses.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateStorageDetail.sql" />
+    <Build Include="dbo\Stored Procedures\udp_CreateTestEmployeesAndUsers.sql" />
+    <Build Include="dbo\Stored Procedures\udp_SeedTestData.sql" />
+    <Build Include="dbo\Stored Procedures\udp_ClearTestData.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertUser.sql" />
+    <Build Include="dbo\Stored Procedures\udp_InsertLoginHistory.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetLoginHistory.sql" />
+    <Build Include="dbo\Stored Procedures\udp_DeleteLoginHistory.sql" />
+    <Build Include="dbo\Stored Procedures\udp_GetUserRoles.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UnassignRoleFromUser.sql" />
+    <Build Include="dbo\Stored Procedures\udp_AssignRoleToUser.sql" />
+    <Build Include="dbo\Stored Procedures\udp_UpdateLoginHistory.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dev.Database.publish.xml" />
     <None Include="Test.Database.publish.xml" />
+    <None Include="Warehouse.Database.publish.xml" />
   </ItemGroup>
 </Project>

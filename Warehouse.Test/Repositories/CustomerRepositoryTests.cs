@@ -1,4 +1,5 @@
-using Warehouse.DTO.Main;
+using System.Linq;
+using Warehouse.DTO.Locations;
 
 namespace Warehouse.Test.Repositories;
 
@@ -9,106 +10,114 @@ public class CustomerRepositoryTests : RepositoryTestBase
     public void Insert_WithPhysicalCustomerType_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: create a CustomerDto with CustomerType = false (physical), unique Phone
+        var dto = new CustomerDto
+        {
+            CustomerType = false,
+            Phone = "5" + Guid.NewGuid().ToString("N")[..11],
+            Email = $"p{Guid.NewGuid():N}"[..10] + "@t.com"
+        };
 
         // Act
-        // TODO: call UnitOfWork.CustomerRepository.Insert(dto)
+        var id = UnitOfWork.CustomerRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Insert_WithLegalCustomerType_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: create a CustomerDto with CustomerType = true (legal), unique Phone
+        var dto = new CustomerDto
+        {
+            CustomerType = true,
+            Phone = "5" + Guid.NewGuid().ToString("N")[..11],
+            Email = $"l{Guid.NewGuid():N}"[..10] + "@t.com"
+        };
 
         // Act
-        // TODO: call UnitOfWork.CustomerRepository.Insert(dto)
+        var id = UnitOfWork.CustomerRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingCustomerId_ReturnsMatchingCustomer()
     {
         // Arrange
-        // TODO: insert a CustomerDto, capture id
+        const int id = 1;
+        const string expectedPhone = "599111111111";
 
         // Act
-        // TODO: call UnitOfWork.CustomerRepository.Get(id)
+        var result = UnitOfWork.CustomerRepository.Get(id);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Phone, Is.EqualTo(expected phone))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Phone, Is.EqualTo(expectedPhone));
     }
 
     [Test]
     public void Get_WithNonExistingCustomerId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.CustomerRepository.Get(int.MaxValue)
+        var result = UnitOfWork.CustomerRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByCustomerType_ReturnsOnlyMatchingCustomers()
     {
-        // Arrange
-        // TODO: insert one physical (false) and one legal (true) customer
-
         // Act
-        // TODO: call Load(c => c.CustomerType == false)
+        var result = UnitOfWork.CustomerRepository.Load(c => c.CustomerType == false).ToList();
 
         // Assert
-        // TODO: verify all returned records have CustomerType == false
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Empty);
+        Assert.That(result.All(c => c.CustomerType == false), Is.True);
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
         // Act
-        // TODO: call Load(c => c.Phone == "__nonexistent__")
+        var result = UnitOfWork.CustomerRepository.Load(c => c.Phone == "__nonexistent__").ToList();
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 
     [Test]
     public void Update_WithChangedPhone_PersistsNewPhone()
     {
         // Arrange
-        // TODO: insert a customer, Get(id) to retrieve entity
+        var dto = UnitOfWork.CustomerRepository.Get(2);
+        Assert.That(dto, Is.Not.Null);
+
+        var newPhone = "5" + Guid.NewGuid().ToString("N")[..11];
+        dto!.Phone = newPhone;
 
         // Act
-        // TODO: change Phone, call Update(dto)
+        UnitOfWork.CustomerRepository.Update(dto);
 
         // Assert
-        // TODO: Get(id) and verify Phone equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.CustomerRepository.Get(2);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.Phone, Is.EqualTo(newPhone));
     }
 
     [Test]
     public void Delete_WithExistingCustomerId_RemovesCustomerFromDatabase()
     {
         // Arrange
-        // TODO: insert a customer, capture id
+        const int id = 5;
 
         // Act
-        // TODO: call Delete(id)
+        UnitOfWork.CustomerRepository.Delete(id);
 
         // Assert
-        // TODO: Get(id) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.CustomerRepository.Get(id);
+        Assert.That(result, Is.Null);
     }
 }

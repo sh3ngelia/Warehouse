@@ -1,5 +1,5 @@
 ﻿using System.Data.Common;
-using Warehouse.DTO.Main;
+using Warehouse.DTO.Products;
 using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.Repositories;

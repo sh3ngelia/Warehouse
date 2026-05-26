@@ -1,4 +1,5 @@
-using Warehouse.DTO.Main;
+using System.Linq;
+using Warehouse.DTO.Locations;
 
 namespace Warehouse.Test.Repositories;
 
@@ -9,107 +10,111 @@ public class CityRepositoryTests : RepositoryTestBase
     public void Insert_WithValidCity_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: insert a RegionDto first to get a valid RegionId
-        // TODO: create a CityDto with that RegionId and a unique Name
+        var dto = new CityDto
+        {
+            RegionId = 1,
+            Name = "TestCity_" + Guid.NewGuid().ToString("N")[..8]
+        };
 
         // Act
-        // TODO: call UnitOfWork.CityRepository.Insert(dto)
+        var id = UnitOfWork.CityRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingCityId_ReturnsMatchingCity()
     {
         // Arrange
-        // TODO: insert a Region, then insert a City using that RegionId, capture cityId
+        const int cityId = 1;
+        const string expectedName = "Tbilisi";
 
         // Act
-        // TODO: call UnitOfWork.CityRepository.Get(cityId)
+        var result = UnitOfWork.CityRepository.Get(cityId);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Name, Is.EqualTo(expected name))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Name, Is.EqualTo(expectedName));
     }
 
     [Test]
     public void Get_WithNonExistingCityId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.CityRepository.Get(int.MaxValue)
+        var result = UnitOfWork.CityRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByCityName_ReturnsOnlyMatchingCities()
     {
         // Arrange
-        // TODO: insert a Region, then insert two cities with distinct names under that region
+        const string cityName = "Athens";
 
         // Act
-        // TODO: call Load(c => c.Name == insertedName)
+        var result = UnitOfWork.CityRepository.Load(c => c.Name == cityName).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result.First().Name, Is.EqualTo(cityName));
     }
 
     [Test]
     public void Load_ByRegionId_ReturnsAllCitiesInThatRegion()
     {
         // Arrange
-        // TODO: insert a Region, then insert two cities under it
+        const int regionId = 1;
 
         // Act
-        // TODO: call Load(c => c.RegionId == regionId)
+        var result = UnitOfWork.CityRepository.Load(c => c.RegionId == regionId).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(2))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(4));
+        Assert.That(result.All(c => c.RegionId == regionId), Is.True);
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
         // Act
-        // TODO: call Load(c => c.Name == "__nonexistent__")
+        var result = UnitOfWork.CityRepository.Load(c => c.Name == "__nonexistent__").ToList();
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 
     [Test]
     public void Update_WithChangedCityName_PersistsNewName()
     {
         // Arrange
-        // TODO: insert Region + City, Get(cityId) to retrieve entity
+        var dto = UnitOfWork.CityRepository.Get(3); // Batumi
+        Assert.That(dto, Is.Not.Null);
+
+        dto!.Name = "Batumi_Updated";
 
         // Act
-        // TODO: change Name, call Update(dto)
+        UnitOfWork.CityRepository.Update(dto);
 
         // Assert
-        // TODO: Get(cityId) and verify Name equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.CityRepository.Get(3);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.Name, Is.EqualTo("Batumi_Updated"));
     }
 
     [Test]
     public void Delete_WithExistingCityId_RemovesCityFromDatabase()
     {
         // Arrange
-        // TODO: insert Region + City, capture cityId
+        const int cityId = 12; // Marseille
 
         // Act
-        // TODO: call Delete(cityId)
+        UnitOfWork.CityRepository.Delete(cityId);
 
         // Assert
-        // TODO: Get(cityId) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.CityRepository.Get(cityId);
+        Assert.That(result, Is.Null);
     }
 }

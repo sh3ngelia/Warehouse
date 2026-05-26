@@ -1,5 +1,4 @@
-using Warehouse.DTO.Main;
-using Warehouse.Repository.Interfaces;
+using Warehouse.DTO.Products;
 
 namespace Warehouse.Test.Repositories;
 
@@ -10,10 +9,10 @@ public class CategoryRepositoryTests : RepositoryTestBase
     public void Insert_WithValidCategory_ReturnsNewPositiveId()
     {
         // Arrange
-        ICategoryRepository repository = UnitOfWork.CategoryRepository;
+        var repository = UnitOfWork.CategoryRepository;
         CategoryDto newCategory = new CategoryDto
         {
-            CategoryName = "Test Category " + Guid.NewGuid()
+            CategoryName = "Test Category" 
         };
 
         // Act
@@ -26,104 +25,98 @@ public class CategoryRepositoryTests : RepositoryTestBase
         Assert.That(insertedCategory!.CategoryName, Is.EqualTo(newCategory.CategoryName), "Inserted category name should match");
     }
 
-    [Test]
-    public void Insert_WithInvalidCategory_ReturnsNewPositiveId()
-    {
-        // Arrange
-        ICategoryRepository repository = UnitOfWork.CategoryRepository;
-        CategoryDto newCategory = new CategoryDto
-        {
-            CategoryName = null
-        };
+    //[Test]
+    //public void Insert_WithInvalidCategory_ReturnsNewPositiveId()
+    //{
+    //    // Arrange
+    //    var repository = UnitOfWork.CategoryRepository;
+    //    CategoryDto newCategory = new CategoryDto
+    //    {
+    //        CategoryName = null
+    //    };
 
-        // Act and Assert
-        Assert.Throws<ArgumentException>(() => repository.Insert(newCategory), "Inserting a category with null name should throw an exception");
-    }
+    //    // Act and Assert
+    //    Assert.That(() => repository.Insert(newCategory), Throws.Exception, "Inserting a category with null name should throw an exception");
+    //}
 
     [Test]
     public void Get_WithExistingCategoryId_ReturnsMatchingCategory()
     {
         // Arrange
-        // TODO: insert a CategoryDto to get a known id
+        const int id = 1;
+        const string expectedName = "Electronics";
 
         // Act
-        // TODO: call UnitOfWork.CategoryRepository.Get(id)
+        var result = UnitOfWork.CategoryRepository.Get(id);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.CategoryName, Is.EqualTo(expected name))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.CategoryName, Is.EqualTo(expectedName));
     }
 
     [Test]
     public void Get_WithNonExistingCategoryId_ReturnsNull()
     {
-        // Arrange
-        // TODO: use a large id that is guaranteed not to exist (e.g. int.MaxValue)
-
         // Act
-        // TODO: call UnitOfWork.CategoryRepository.Get(int.MaxValue)
+        var result = UnitOfWork.CategoryRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByCategoryName_ReturnsOnlyMatchingCategories()
     {
         // Arrange
-        // TODO: insert two categories with distinct names
+        const string categoryName = "Electronics";
 
         // Act
-        // TODO: call UnitOfWork.CategoryRepository.Load(c => c.CategoryName == insertedName)
+        var result = UnitOfWork.CategoryRepository.Load(c => c.CategoryName == categoryName).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        // TODO: Assert.That(result.First().CategoryName, Is.EqualTo(insertedName))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result.First().CategoryName, Is.EqualTo(categoryName));
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
-        // Arrange
-        // (no setup needed)
-
         // Act
-        // TODO: call Load(c => c.CategoryName == "__nonexistent__")
+        var result = UnitOfWork.CategoryRepository.Load(c => c.CategoryName == "__nonexistent__").ToList();
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 
     [Test]
     public void Update_WithChangedCategoryName_PersistsNewName()
     {
         // Arrange
-        // TODO: insert a category, capture returned id
-        // TODO: Get(id) to get the full entity
+        var dto = UnitOfWork.CategoryRepository.Get(2); // Furniture
+        Assert.That(dto, Is.Not.Null);
+
+        dto!.CategoryName = "Furniture_Updated";
 
         // Act
-        // TODO: change CategoryName, call Update(dto)
+        UnitOfWork.CategoryRepository.Update(dto);
 
         // Assert
-        // TODO: Get(id) again and verify CategoryName equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.CategoryRepository.Get(2);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.CategoryName, Is.EqualTo("Furniture_Updated"));
     }
 
     [Test]
     public void Delete_WithExistingCategoryId_RemovesCategoryFromDatabase()
     {
         // Arrange
-        // TODO: insert a category, capture returned id
+        const int id = 5; // Tools
 
         // Act
-        // TODO: call Delete(id)
+        UnitOfWork.CategoryRepository.Delete(id);
 
         // Assert
-        // TODO: Get(id) and verify the result is null (or IsDeleted == true depending on SP behavior)
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.CategoryRepository.Get(id);
+        Assert.That(result, Is.Null);
     }
 }

@@ -1,4 +1,5 @@
-using Warehouse.DTO.Main;
+using System.Linq;
+using Warehouse.DTO.Storage;
 
 namespace Warehouse.Test.Repositories;
 
@@ -9,108 +10,118 @@ public class StorageRepositoryTests : RepositoryTestBase
     public void Insert_WithValidStorage_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: insert a StorageStatusDto (Main) to get a valid Status id
-        // TODO: insert a Region then a City to get a valid CityId
-        // TODO: create a StorageDto with those FK values, unique Name, Address, Capacity, Price
+        var dto = new StorageDto
+        {
+            Status = 1,
+            CityId = 1,
+            Name = "Storage_" + Guid.NewGuid().ToString("N")[..8],
+            Description = "Test storage",
+            Capacity = 100,
+            Address = "Address_" + Guid.NewGuid().ToString("N")[..8],
+            Price = 99.99m
+        };
 
         // Act
-        // TODO: call UnitOfWork.StorageRepository.Insert(dto)
+        var id = UnitOfWork.StorageRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingStorageId_ReturnsMatchingStorage()
     {
         // Arrange
-        // TODO: insert StorageStatus + Region + City + Storage, capture storageId
+        const int storageId = 1;
+        const string expectedName = "Tbilisi Central";
 
         // Act
-        // TODO: call UnitOfWork.StorageRepository.Get(storageId)
+        var result = UnitOfWork.StorageRepository.Get(storageId);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Name, Is.EqualTo(expected name))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Name, Is.EqualTo(expectedName));
     }
 
     [Test]
     public void Get_WithNonExistingStorageId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.StorageRepository.Get(int.MaxValue)
+        var result = UnitOfWork.StorageRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByStorageName_ReturnsOnlyMatchingStorages()
     {
         // Arrange
-        // TODO: insert StorageStatus + Region + City + two Storages with distinct names
+        const string storageName = "Tbilisi Central";
 
         // Act
-        // TODO: call Load(s => s.Name == insertedName)
+        var result = UnitOfWork.StorageRepository
+            .Load(s => s.Name == storageName)
+            .ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.That(result.First().Name, Is.EqualTo(storageName));
     }
 
     [Test]
     public void Load_ByCityId_ReturnsAllStoragesInThatCity()
     {
         // Arrange
-        // TODO: insert StorageStatus + Region + City + two Storages linked to same CityId
+        const int cityId = 1;
 
         // Act
-        // TODO: call Load(s => s.CityId == cityId)
+        var result = UnitOfWork.StorageRepository.Load(s => s.CityId == cityId).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(2))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result.All(s => s.CityId == cityId), Is.True);
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
         // Act
-        // TODO: call Load(s => s.Name == "__nonexistent__")
+        var result = UnitOfWork.StorageRepository.Load(s => s.Name == "__nonexistent__").ToList();
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 
     [Test]
     public void Update_WithChangedStoragePrice_PersistsNewPrice()
     {
         // Arrange
-        // TODO: insert full chain, Get(storageId) to retrieve entity
+        var dto = UnitOfWork.StorageRepository.Get(2);
+        Assert.That(dto, Is.Not.Null);
+
+        dto!.Price = 123.45m;
 
         // Act
-        // TODO: change Price, call Update(dto)
+        UnitOfWork.StorageRepository.Update(dto);
 
         // Assert
-        // TODO: Get(storageId) and verify Price equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.StorageRepository.Get(2);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.Price, Is.EqualTo(123.45m));
     }
 
     [Test]
     public void Delete_WithExistingStorageId_RemovesStorageFromDatabase()
     {
         // Arrange
-        // TODO: insert full chain, capture storageId
+        const int storageId = 5;
 
         // Act
-        // TODO: call Delete(storageId)
+        UnitOfWork.StorageRepository.Delete(storageId);
 
         // Assert
-        // TODO: Get(storageId) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.StorageRepository.Get(storageId);
+        Assert.That(result, Is.Null);
     }
 }

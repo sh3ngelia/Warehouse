@@ -1,3 +1,4 @@
+using System.Linq;
 using Warehouse.DTO.Lookups;
 
 namespace Warehouse.Test.Repositories;
@@ -9,92 +10,97 @@ public class PermissionRepositoryTests : RepositoryTestBase
     public void Insert_WithValidPermission_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: create a PermissionDto with a unique Name and a unique PermissionKey (short)
+        var dto = new PermissionDto
+        {
+            Name = "Permission_" + Guid.NewGuid().ToString("N")[..8],
+            PermissionKey = (short)new Random().Next(100, 30000)
+        };
 
         // Act
-        // TODO: call UnitOfWork.PermissionRepository.Insert(dto)
+        var id = UnitOfWork.PermissionRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingPermissionId_ReturnsMatchingPermission()
     {
         // Arrange
-        // TODO: insert a PermissionDto, capture id
+        const int id = 1;
+        const string expectedName = "Create Contract";
 
         // Act
-        // TODO: call UnitOfWork.PermissionRepository.Get(id)
+        var result = UnitOfWork.PermissionRepository.Get(id);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Name, Is.EqualTo(expected name))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Name, Is.EqualTo(expectedName));
     }
 
     [Test]
     public void Get_WithNonExistingPermissionId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.PermissionRepository.Get(int.MaxValue)
+        var result = UnitOfWork.PermissionRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByPermissionName_ReturnsOnlyMatchingPermissions()
     {
         // Arrange
-        // TODO: insert two permissions with distinct names
+        const string name = "Edit Contract";
 
         // Act
-        // TODO: call Load(p => p.Name == insertedName)
+        var result = UnitOfWork.PermissionRepository.Load(p => p.Name == name).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result.First().Name, Is.EqualTo(name));
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
         // Act
-        // TODO: call Load(p => p.Name == "__nonexistent__")
+        var result = UnitOfWork.PermissionRepository.Load(p => p.Name == "__nonexistent__").ToList();
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 
     [Test]
     public void Update_WithChangedPermissionName_PersistsNewName()
     {
         // Arrange
-        // TODO: insert a permission, Get(id) to retrieve entity
+        var dto = UnitOfWork.PermissionRepository.Get(2);
+        Assert.That(dto, Is.Not.Null);
+
+        dto!.Name = "Edit Contract Updated";
 
         // Act
-        // TODO: change Name, call Update(dto)
+        UnitOfWork.PermissionRepository.Update(dto);
 
         // Assert
-        // TODO: Get(id) and verify Name equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.PermissionRepository.Get(2);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.Name, Is.EqualTo("Edit Contract Updated"));
     }
 
     [Test]
     public void Delete_WithExistingPermissionId_RemovesPermissionFromDatabase()
     {
         // Arrange
-        // TODO: insert a permission, capture id
+        const int id = 5;
 
         // Act
-        // TODO: call Delete(id)
+        UnitOfWork.PermissionRepository.Delete(id);
 
         // Assert
-        // TODO: Get(id) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.PermissionRepository.Get(id);
+        Assert.That(result, Is.Null);
     }
 }

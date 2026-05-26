@@ -1,3 +1,4 @@
+using System.Linq;
 using Warehouse.DTO.Lookups;
 
 namespace Warehouse.Test.Repositories;
@@ -9,82 +10,86 @@ public class ContractStatusRepositoryTests : RepositoryTestBase
     public void Insert_WithValidContractStatus_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: create a ContractStatusDto with a unique Name
-        //       Note: ContractStatusId is byte? — the SP returns it as an output param
+        var dto = new ContractStatusDto
+        {
+            Name = "Status_" + Guid.NewGuid().ToString("N")[..8]
+        };
 
         // Act
-        // TODO: call UnitOfWork.ContractStatusRepository.Insert(dto)
+        var id = UnitOfWork.ContractStatusRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingContractStatusId_ReturnsMatchingStatus()
     {
         // Arrange
-        // TODO: insert a ContractStatusDto, capture id
+        const int id = 1;
+        const string expectedName = "Pending";
 
         // Act
-        // TODO: call UnitOfWork.ContractStatusRepository.Get(id)
+        var result = UnitOfWork.ContractStatusRepository.Get(id);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Name, Is.EqualTo(expected name))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Name, Is.EqualTo(expectedName));
     }
 
     [Test]
     public void Get_WithNonExistingContractStatusId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.ContractStatusRepository.Get(byte.MaxValue)
+        var result = UnitOfWork.ContractStatusRepository.Get(byte.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByStatusName_ReturnsOnlyMatchingStatuses()
     {
         // Arrange
-        // TODO: insert two contract statuses with distinct names
+        const string expectedName = "Active";
 
         // Act
-        // TODO: call Load(cs => cs.Name == insertedName)
+        var result = UnitOfWork.ContractStatusRepository.Load(cs => cs.Name == expectedName).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result.First().Name, Is.EqualTo(expectedName));
     }
 
     [Test]
     public void Update_WithChangedStatusName_PersistsNewName()
     {
         // Arrange
-        // TODO: insert a status, Get(id) to retrieve entity
+        var dto = UnitOfWork.ContractStatusRepository.Get(3); // Completed
+        Assert.That(dto, Is.Not.Null);
+
+        dto!.Name = "Completed_New";
 
         // Act
-        // TODO: change Name, call Update(dto)
+        UnitOfWork.ContractStatusRepository.Update(dto);
 
         // Assert
-        // TODO: Get(id) and verify Name equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.ContractStatusRepository.Get(3);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.Name, Is.EqualTo("Completed_New"));
     }
 
     [Test]
     public void Delete_WithExistingContractStatusId_RemovesStatusFromDatabase()
     {
         // Arrange
-        // TODO: insert a status, capture id
+        const int id = 5; // Suspended
 
         // Act
-        // TODO: call Delete(id)
+        UnitOfWork.ContractStatusRepository.Delete(id);
 
         // Assert
-        // TODO: Get(id) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.ContractStatusRepository.Get(id);
+        Assert.That(result, Is.Null);
     }
 }

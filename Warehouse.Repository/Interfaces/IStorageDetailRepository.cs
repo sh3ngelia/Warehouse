@@ -1,4 +1,4 @@
-﻿using Warehouse.DTO.Main;
+﻿using Warehouse.DTO.Storage;
 
 namespace Warehouse.Repository.Interfaces;
 

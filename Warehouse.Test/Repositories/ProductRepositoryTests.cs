@@ -1,4 +1,4 @@
-using Warehouse.DTO.Main;
+using Warehouse.DTO.Products;
 
 namespace Warehouse.Test.Repositories;
 
@@ -9,107 +9,113 @@ public class ProductRepositoryTests : RepositoryTestBase
     public void Insert_WithValidProduct_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: insert a CategoryDto first to get a valid CategoryId
-        // TODO: create a ProductDto with that CategoryId, a unique Name, and a unique SKU (20 chars max)
+        var dto = new ProductDto
+        {
+            CategoryId = 1,
+            Name = "Product_" + Guid.NewGuid().ToString("N")[..8],
+            SKU = Guid.NewGuid().ToString("N")[..20],
+            Description = "Test product"
+        };
 
         // Act
-        // TODO: call UnitOfWork.ProductRepository.Insert(dto)
+        var id = UnitOfWork.ProductRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingProductId_ReturnsMatchingProduct()
     {
         // Arrange
-        // TODO: insert a Category + Product, capture productId
+        const int productId = 1;
+        const string expectedName = "Laptop";
 
         // Act
-        // TODO: call UnitOfWork.ProductRepository.Get(productId)
+        var result = UnitOfWork.ProductRepository.Get(productId);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Name, Is.EqualTo(expected name))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Name, Is.EqualTo(expectedName));
     }
 
     [Test]
     public void Get_WithNonExistingProductId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.ProductRepository.Get(int.MaxValue)
+        var result = UnitOfWork.ProductRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByProductName_ReturnsOnlyMatchingProducts()
     {
         // Arrange
-        // TODO: insert a Category, then insert two products with distinct names
+        const string productName = "Monitor";
 
         // Act
-        // TODO: call Load(p => p.Name == insertedName)
+        var result = UnitOfWork.ProductRepository.Load(p => p.Name == productName).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result.First().Name, Is.EqualTo(productName));
     }
 
     [Test]
     public void Load_ByCategoryId_ReturnsAllProductsInThatCategory()
     {
         // Arrange
-        // TODO: insert a Category, then insert two products linked to it
+        const int categoryId = 1;
 
         // Act
-        // TODO: call Load(p => p.CategoryId == categoryId)
+        var result = UnitOfWork.ProductRepository.Load(p => p.CategoryId == categoryId).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(2))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(3));
+        Assert.That(result.All(p => p.CategoryId == categoryId), Is.True);
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
         // Act
-        // TODO: call Load(p => p.Name == "__nonexistent__")
+        var result = UnitOfWork.ProductRepository.Load(p => p.Name == "__nonexistent__").ToList();
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 
     [Test]
     public void Update_WithChangedProductName_PersistsNewName()
     {
         // Arrange
-        // TODO: insert Category + Product, Get(productId) to retrieve entity
+        var dto = UnitOfWork.ProductRepository.Get(4); // Coffee Pack
+        Assert.That(dto, Is.Not.Null);
+
+        dto!.Name = "Coffee Pack Updated";
 
         // Act
-        // TODO: change Name, call Update(dto)
+        UnitOfWork.ProductRepository.Update(dto);
 
         // Assert
-        // TODO: Get(productId) and verify Name equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.ProductRepository.Get(4);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.Name, Is.EqualTo("Coffee Pack Updated"));
     }
 
     [Test]
     public void Delete_WithExistingProductId_RemovesProductFromDatabase()
     {
         // Arrange
-        // TODO: insert Category + Product, capture productId
+        const int productId = 5; // Jacket
 
         // Act
-        // TODO: call Delete(productId)
+        UnitOfWork.ProductRepository.Delete(productId);
 
         // Assert
-        // TODO: Get(productId) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.ProductRepository.Get(productId);
+        Assert.That(result, Is.Null);
     }
 }

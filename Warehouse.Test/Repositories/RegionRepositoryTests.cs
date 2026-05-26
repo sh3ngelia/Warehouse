@@ -1,4 +1,4 @@
-using Warehouse.DTO.Main;
+using Warehouse.DTO.Locations;
 
 namespace Warehouse.Test.Repositories;
 
@@ -9,96 +9,111 @@ public class RegionRepositoryTests : RepositoryTestBase
     public void Insert_WithValidRegion_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: create a RegionDto with a unique Name
+        var regionRepository = UnitOfWork.RegionRepository;
+        var region = new RegionDto
+        {
+            Name = "TestRegion"
+        };
 
         // Act
-        // TODO: call UnitOfWork.RegionRepository.Insert(dto)
+        var id = regionRepository.Insert(region);
+        var insertedRegion = regionRepository.Get(id);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0), "Insert should return a positive id");
+        Assert.That(insertedRegion, Is.Not.Null, "Inserted region should be retrievable");
+        Assert.That(insertedRegion!.Name, Is.EqualTo(region.Name), "Inserted region should have the same name");
     }
 
     [Test]
-    public void Get_WithExistingRegionId_ReturnsMatchingRegion()
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    public void Get_WithExistingRegionId_ReturnsMatchingRegion(int id)
     {
         // Arrange
-        // TODO: insert a RegionDto, capture id
+        var regionRepository = UnitOfWork.RegionRepository;
 
         // Act
-        // TODO: call UnitOfWork.RegionRepository.Get(id)
+        var region = regionRepository.Get(id);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Name, Is.EqualTo(expected name))
-        Assert.Ignore("TODO: implement");
+        Assert.That(region, Is.Not.Null, $"Region with id {id} should exist");
     }
 
     [Test]
     public void Get_WithNonExistingRegionId_ReturnsNull()
     {
         // Arrange
-        // TODO: use int.MaxValue as id
+        var regionRepository = UnitOfWork.RegionRepository;
 
         // Act
-        // TODO: call UnitOfWork.RegionRepository.Get(int.MaxValue)
+        var region = regionRepository.Get(-1);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(region, Is.Null, "Region with non-existing id should be null");
     }
 
     [Test]
     public void Load_ByRegionName_ReturnsOnlyMatchingRegions()
     {
         // Arrange
-        // TODO: insert two regions with distinct names
+        var regionRepository = UnitOfWork.RegionRepository;
+        const string existingRegionName = "Georgia";
 
         // Act
-        // TODO: call Load(r => r.Name == insertedName)
+        var result = regionRepository.Load(r => r.Name == existingRegionName).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        // TODO: Assert.That(result.First().Name, Is.EqualTo(insertedName))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result.First().Name, Is.EqualTo(existingRegionName));
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
+        // Arrange
+        var regionRepository = UnitOfWork.RegionRepository;
+
         // Act
-        // TODO: call Load(r => r.Name == "__nonexistent__")
+        var result = regionRepository.Load(r => r.Name == "__nonexistent__").ToList();
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 
     [Test]
     public void Update_WithChangedRegionName_PersistsNewName()
     {
         // Arrange
-        // TODO: insert a region, Get(id) to retrieve full entity
+        var regionRepository = UnitOfWork.RegionRepository;
+        var regionToUpdate = regionRepository.Get(3); // USA
+
+        Assert.That(regionToUpdate, Is.Not.Null);
+
+        regionToUpdate!.Name = "USA_Updated";
 
         // Act
-        // TODO: change Name, call Update(dto)
+        regionRepository.Update(regionToUpdate);
 
         // Assert
-        // TODO: Get(id) and verify Name equals the new value
-        Assert.Ignore("TODO: implement");
+        var updatedRegion = regionRepository.Get(3);
+        Assert.That(updatedRegion, Is.Not.Null);
+        Assert.That(updatedRegion!.Name, Is.EqualTo("USA_Updated"));
     }
 
     [Test]
     public void Delete_WithExistingRegionId_RemovesRegionFromDatabase()
     {
         // Arrange
-        // TODO: insert a region, capture id
+        var regionRepository = UnitOfWork.RegionRepository;
+        const int regionId = 4; // France
 
         // Act
-        // TODO: call Delete(id)
+        regionRepository.Delete(regionId);
 
         // Assert
-        // TODO: Get(id) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var deletedRegion = regionRepository.Get(regionId);
+        Assert.That(deletedRegion, Is.Null);
     }
 }

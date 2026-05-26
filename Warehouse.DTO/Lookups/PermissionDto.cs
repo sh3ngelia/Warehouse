@@ -9,8 +9,6 @@ public class PermissionDto
     public int? PermissionId { get; set; }
     public string Name { get; set; } = null!;
     public short PermissionKey { get; set; }
-    [IgnoreForInsert]
-    [IgnoreForUpdate]
     public string? Description { get; set; }
     [IgnoreForInsert]
     [IgnoreForUpdate]

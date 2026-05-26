@@ -1,4 +1,4 @@
-using Warehouse.DTO.Main;
+using Warehouse.DTO.Users;
 
 namespace Warehouse.Test.Repositories;
 
@@ -9,29 +9,41 @@ public class EmployeeRepositoryTests : RepositoryTestBase
     public void Insert_WithValidEmployee_ReturnsNewPositiveId()
     {
         // Arrange
-        // TODO: create an EmployeeDto with unique PersonalId (11 chars), FirstName, LastName, Phone, Email
+        var dto = new EmployeeDto
+        {
+            PersonalId = new string(
+                Guid.NewGuid()
+                    .ToString("N")
+                    .Where(char.IsDigit) 
+                    .Take(11)
+                    .ToArray()
+            ),
+            FirstName = "Test",
+            LastName = "Employee",
+            Phone = "1234567890",
+            Email = $"{Guid.NewGuid()}@test.com"
+        };
 
         // Act
-        // TODO: call UnitOfWork.EmployeeRepository.Insert(dto)
+        var id = UnitOfWork.EmployeeRepository.Insert(dto);
 
-        // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.Multiple(() =>
+        {
+            // Assert
+            Assert.That(id, Is.GreaterThan(0));
+        });
     }
 
     [Test]
     public void Get_WithExistingEmployeeId_ReturnsMatchingEmployee()
     {
-        // Arrange
-        // TODO: insert an EmployeeDto, capture id
-
         // Act
-        // TODO: call UnitOfWork.EmployeeRepository.Get(id)
+        var expected = "12345678901";
+        var result = UnitOfWork.EmployeeRepository.Get(1);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.PersonalId, Is.EqualTo(expected value))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.PersonalId, Is.EqualTo(expected));
     }
 
     [Test]
@@ -39,63 +51,71 @@ public class EmployeeRepositoryTests : RepositoryTestBase
     {
         // Act
         // TODO: call UnitOfWork.EmployeeRepository.Get(int.MaxValue)
+        var result = UnitOfWork.EmployeeRepository.Get(int.MaxValue);
 
         // Assert
         // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByLastName_ReturnsOnlyMatchingEmployees()
     {
         // Arrange
-        // TODO: insert two employees with distinct last names
-
+        var insertedLastName = "Beridze";
+        
         // Act
-        // TODO: call Load(e => e.LastName == insertedLastName)
+        var result = UnitOfWork.EmployeeRepository.Load(e => 
+        e.LastName == insertedLastName && e.IsDeleted == false);
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        // TODO: Assert.That(result.First().LastName, Is.EqualTo(insertedLastName))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result.Count(), Is.EqualTo(1));
+        Assert.That(result.First().LastName, Is.EqualTo(insertedLastName));
     }
 
     [Test]
     public void Load_WithPredicateThatMatchesNothing_ReturnsEmptyCollection()
     {
+        // Arrange
+        var expectedEmail = "__nonexistent__@test.com";
+     
         // Act
-        // TODO: call Load(e => e.Email == "__nonexistent__@test.com")
+        var result = UnitOfWork.EmployeeRepository.Load(e => e.Email == expectedEmail);
 
         // Assert
-        // TODO: Assert.That(result, Is.Empty)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Empty);
     }
 
     [Test]
     public void Update_WithChangedEmail_PersistsNewEmail()
     {
         // Arrange
-        // TODO: insert an employee, Get(id) to retrieve entity
+        const int employeeId = 3;
+
+        var employee = UnitOfWork.EmployeeRepository.Get(employeeId);
+        Assert.That(employee, Is.Not.Null);
+
+        var newEmail = "updated2@test.com";
+
+        employee!.Email = newEmail;
 
         // Act
-        // TODO: change Email, call Update(dto)
+        UnitOfWork.EmployeeRepository.Update(employee);
+        var updatedEmployee = UnitOfWork.EmployeeRepository.Get(employeeId);
 
         // Assert
-        // TODO: Get(id) and verify Email equals the new value
-        Assert.Ignore("TODO: implement");
+        Assert.That(updatedEmployee, Is.Not.Null);
+        Assert.That(updatedEmployee!.Email, Is.EqualTo(newEmail));
     }
 
     [Test]
     public void Delete_WithExistingEmployeeId_RemovesEmployeeFromDatabase()
     {
-        // Arrange
-        // TODO: insert an employee, capture id
-
         // Act
-        // TODO: call Delete(id)
+        UnitOfWork.EmployeeRepository.Delete(2);
+        var result = UnitOfWork.EmployeeRepository.Get(2);
 
         // Assert
-        // TODO: Get(id) and verify result is null
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 }

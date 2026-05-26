@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Warehouse.Repository.Interfaces;
+﻿using Warehouse.Repository.Interfaces;
 
 namespace Warehouse.Repository.UnitOfWork;
 

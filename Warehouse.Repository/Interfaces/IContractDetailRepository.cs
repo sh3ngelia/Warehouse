@@ -1,4 +1,4 @@
-﻿using Warehouse.DTO.Main;
+﻿using Warehouse.DTO.Contracts;
 
 namespace Warehouse.Repository.Interfaces;
 

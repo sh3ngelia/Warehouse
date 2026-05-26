@@ -2,10 +2,10 @@
 
 create procedure udp_InsertPhysicalCustomer
 
+    @CustomerId int output,
     @FirstName varchar(20),
     @LastName varchar(20),
-    @PersonalId char(11),
-    @CustomerId int output
+    @PersonalId char(11)
 as
 begin
     set nocount on;
@@ -33,9 +33,8 @@ begin
 
         begin tran;
 
-        insert into PhysicalCustomers(FirstName, LastName, PersonalId)
-        values (@FirstName, @LastName, @PersonalId);
-        set @CustomerId = scope_identity();
+        insert into PhysicalCustomers(CustomerId, FirstName, LastName, PersonalId)
+        values (@CustomerId, @FirstName, @LastName, @PersonalId);
 
         commit;
         return 0;

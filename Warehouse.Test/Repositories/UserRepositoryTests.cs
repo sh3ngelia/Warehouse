@@ -1,109 +1,108 @@
+using System.Linq;
 using System.Text;
-using Warehouse.DTO.Main;
+using Warehouse.DTO;
+using Warehouse.DTO.Users;
 
 namespace Warehouse.Test.Repositories;
 
 [TestFixture]
 public class UserRepositoryTests : RepositoryTestBase
 {
-    [Test]
-    public void Insert_WithValidUser_ReturnsEmployeeId()
-    {
-        // Arrange
-        // TODO: insert an EmployeeDto to get a valid EmployeeId (Users.EmployeeId FK → Employees)
-        // TODO: create a UserDto with that EmployeeId, a unique Username, and Password as byte[]
-        //       e.g. Password = Encoding.UTF8.GetBytes("testpassword")
+    //[Test]
+    //public void Insert_WithValidUser_ReturnsEmployeeId()
+    //{
+    //    // Arrange
+    //    var employeeId = UnitOfWork.EmployeeRepository.Insert(new EmployeeDto
+    //    {
+    //        PersonalId = Guid.NewGuid().ToString("N")[..11],
+    //        FirstName = "User",
+    //        LastName = "Employee",
+    //        Phone = "5" + Guid.NewGuid().ToString("N")[..11],
+    //        Email = $"u{Guid.NewGuid():N}"[..10] + "@t.com"
+    //    });
 
-        // Act
-        // TODO: call UnitOfWork.UserRepository.Insert(dto)
+    //    var dto = new UserDto
+    //    {
+    //        EmployeeId = employeeId,
+    //        Username = "user_" + Guid.NewGuid().ToString("N")[..8],
+    //        Password = Encoding.UTF8.GetBytes("testpassword")
+    //    };
 
-        // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
-    }
+    //    // Act
+    //    var id = UnitOfWork.UserRepository.Insert(dto);
 
-    [Test]
-    public void Get_WithExistingEmployeeId_ReturnsMatchingUser()
-    {
-        // Arrange
-        // TODO: insert Employee + User, capture employeeId
+    //    // Assert
+    //    Assert.That(id, Is.GreaterThan(0));
+    //}
 
-        // Act
-        // TODO: call UnitOfWork.UserRepository.Get(employeeId)
+    //[Test]
+    //public void Get_WithExistingEmployeeId_ReturnsMatchingUser()
+    //{
+    //    // Arrange
+    //    const int employeeId = 1;
+    //    const string expectedUsername = "admin";
 
-        // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.Username, Is.EqualTo(expected username))
-        Assert.Ignore("TODO: implement");
-    }
+    //    // Act
+    //    var result = UnitOfWork.UserRepository.Get(employeeId);
 
-    [Test]
-    public void Get_WithNonExistingEmployeeId_ReturnsNull()
-    {
-        // Act
-        // TODO: call UnitOfWork.UserRepository.Get(int.MaxValue)
+    //    // Assert
+    //    Assert.That(result, Is.Not.Null);
+    //    Assert.That(result!.Username, Is.EqualTo(expectedUsername));
+    //}
 
-        // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
-    }
+    //[Test]
+    //public void Get_WithNonExistingEmployeeId_ReturnsNull()
+    //{
+    //    // Act
+    //    var result = UnitOfWork.UserRepository.Get(int.MaxValue);
 
-    [Test]
-    public void Load_ByUsername_ReturnsOnlyMatchingUsers()
-    {
-        // Arrange
-        // TODO: insert two Employee + User pairs with distinct usernames
+    //    // Assert
+    //    Assert.That(result, Is.Null);
+    //}
 
-        // Act
-        // TODO: call Load(u => u.Username == insertedUsername)
+    //[Test]
+    //public void Load_ByUsername_ReturnsOnlyMatchingUsers()
+    //{
+    //    // Arrange
+    //    const string username = "manager";
 
-        // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        Assert.Ignore("TODO: implement");
-    }
+    //    // Act
+    //    var result = UnitOfWork.UserRepository.Load(u => u.Username == username).ToList();
 
-    [Test]
-    public void Update_WithChangedUsername_PersistsNewUsername()
-    {
-        // Arrange
-        // TODO: insert Employee + User, Get(employeeId) to retrieve entity
+    //    // Assert
+    //    Assert.That(result, Has.Count.EqualTo(1));
+    //    Assert.That(result.First().Username, Is.EqualTo(username));
+    //}
 
-        // Act
-        // TODO: change Username, call Update(dto)
+    //[Test]
+    //public void Update_WithChangedUsername_PersistsNewUsername()
+    //{
+    //    // Arrange
+    //    var dto = UnitOfWork.UserRepository.Get(3);
+    //    Assert.That(dto, Is.Not.Null);
 
-        // Assert
-        // TODO: Get(employeeId) and verify Username equals the new value
-        Assert.Ignore("TODO: implement");
-    }
+    //    dto!.Username = "employee1_updated";
 
-    [Test]
-    public void Delete_WithExistingEmployeeId_RemovesUserFromDatabase()
-    {
-        // Arrange
-        // TODO: insert Employee + User, capture employeeId
+    //    // Act
+    //    UnitOfWork.UserRepository.Update(dto);
 
-        // Act
-        // TODO: call Delete(employeeId)
+    //    // Assert
+    //    var updated = UnitOfWork.UserRepository.Get(3);
+    //    Assert.That(updated, Is.Not.Null);
+    //    Assert.That(updated!.Username, Is.EqualTo("employee1_updated"));
+    //}
 
-        // Assert
-        // TODO: Get(employeeId) and verify result is null
-        Assert.Ignore("TODO: implement");
-    }
+    //[Test]
+    //public void Delete_WithExistingEmployeeId_RemovesUserFromDatabase()
+    //{
+    //    // Arrange
+    //    const int employeeId = 5;
 
-    [Test]
-    public void IsLoginUnique_CurrentlyThrowsNotImplementedException()
-    {
-        // This test documents the known gap: IsLoginUnique is not implemented.
-        // Replace this test with a real implementation once the method is written.
+    //    // Act
+    //    UnitOfWork.UserRepository.Delete(employeeId);
 
-        // Arrange
-        // TODO: insert Employee + User with a known username
-
-        // Act & Assert
-        // TODO: Assert.Throws<NotImplementedException>(() => UnitOfWork.UserRepository.IsLoginUnique("someUsername"))
-        //       Once implemented, remove this test and add:
-        //         IsLoginUnique_WithExistingUsername_ReturnsFalse
-        //         IsLoginUnique_WithUniqueUsername_ReturnsTrue
-        Assert.Ignore("TODO: implement (method currently throws NotImplementedException)");
-    }
+    //    // Assert
+    //    var result = UnitOfWork.UserRepository.Get(employeeId);
+    //    Assert.That(result, Is.Null);
+    //}
 }

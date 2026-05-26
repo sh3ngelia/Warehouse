@@ -49,10 +49,10 @@ internal abstract class BaseRepository<T> : IBaseRepository<T> where T : class
         return _connection.Query<T>(sql, dynamicParameters, transaction: _transactionProvider());
     }
 
-    public int Insert(T entity)
+    public virtual int Insert(T entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
-
+       
         var properties = typeof(T).GetProperties();
         var parameters = new DynamicParameters();
 
@@ -68,7 +68,7 @@ internal abstract class BaseRepository<T> : IBaseRepository<T> where T : class
         return parameters.Get<int>($"@{_entityName}Id");
     }
 
-    public void Update(T entity)
+    public virtual void Update(T entity)
     {
         var properties = typeof(T).GetProperties();
         var parameters = new DynamicParameters();
@@ -89,7 +89,7 @@ internal abstract class BaseRepository<T> : IBaseRepository<T> where T : class
             transaction: _transactionProvider(),
             commandType: CommandType.StoredProcedure);
 
-    private static void AssignParameters<TAttribute>(T entity, PropertyInfo[] properties, DynamicParameters parameters) where TAttribute : Attribute
+    protected static void AssignParameters<TAttribute>(T entity, PropertyInfo[] properties, DynamicParameters parameters) where TAttribute : Attribute
     {
         foreach (var property in properties)
         {

@@ -1,4 +1,6 @@
-using Warehouse.DTO.Main;
+using System.Linq;
+using Warehouse.DTO.Customer;
+using Warehouse.DTO.Locations;
 
 namespace Warehouse.Test.Repositories;
 
@@ -9,84 +11,96 @@ public class PhysicalCustomerRepositoryTests : RepositoryTestBase
     public void Insert_WithValidPhysicalCustomer_ReturnsCustomerId()
     {
         // Arrange
-        // TODO: insert a CustomerDto with CustomerType = false (physical) to get a valid CustomerId
-        // TODO: create a PhysicalCustomerDto using that CustomerId, with FirstName, LastName, PersonalId (11 chars)
-        //       Note: PhysicalCustomerDto.CustomerId is [IgnoreForInsert] — the SP takes it as a regular param,
-        //       so verify how the SP accepts the FK. May need to pass CustomerId manually.
+        var customerId = UnitOfWork.CustomerRepository.Insert(new CustomerDto
+        {
+            CustomerType = false,
+            Phone = "5" + Guid.NewGuid().ToString("N")[..11],
+            Email = $"p{Guid.NewGuid():N}"[..10] + "@t.com"
+        });
+
+        var dto = new PhysicalCustomerDto
+        {
+            CustomerId = customerId,
+            FirstName = "Test",
+            LastName = "Physical",
+            PersonalId = Guid.NewGuid().ToString("N")[..11]
+        };
 
         // Act
-        // TODO: call UnitOfWork.PhysicalCustomerRepository.Insert(dto)
+        var id = UnitOfWork.PhysicalCustomerRepository.Insert(dto);
 
         // Assert
-        // TODO: Assert.That(id, Is.GreaterThan(0))
-        Assert.Ignore("TODO: implement");
+        Assert.That(id, Is.GreaterThan(0));
     }
 
     [Test]
     public void Get_WithExistingCustomerId_ReturnsMatchingPhysicalCustomer()
     {
         // Arrange
-        // TODO: insert Customer + PhysicalCustomer, capture customerId
+        const int customerId = 1;
+        const string expectedPersonalId = "11111111111";
 
         // Act
-        // TODO: call UnitOfWork.PhysicalCustomerRepository.Get(customerId)
+        var result = UnitOfWork.PhysicalCustomerRepository.Get(customerId);
 
         // Assert
-        // TODO: Assert.That(result, Is.Not.Null)
-        // TODO: Assert.That(result!.PersonalId, Is.EqualTo(expected value))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.PersonalId, Is.EqualTo(expectedPersonalId));
     }
 
     [Test]
     public void Get_WithNonExistingCustomerId_ReturnsNull()
     {
         // Act
-        // TODO: call UnitOfWork.PhysicalCustomerRepository.Get(int.MaxValue)
+        var result = UnitOfWork.PhysicalCustomerRepository.Get(int.MaxValue);
 
         // Assert
-        // TODO: Assert.That(result, Is.Null)
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Is.Null);
     }
 
     [Test]
     public void Load_ByLastName_ReturnsOnlyMatchingPhysicalCustomers()
     {
         // Arrange
-        // TODO: insert two Customer + PhysicalCustomer pairs with distinct last names
+        const string lastName = "Chikovani";
 
         // Act
-        // TODO: call Load(p => p.LastName == insertedLastName)
+        var result = UnitOfWork.PhysicalCustomerRepository.Load(p => p.LastName == lastName).ToList();
 
         // Assert
-        // TODO: Assert.That(result, Has.Count.EqualTo(1))
-        Assert.Ignore("TODO: implement");
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result.First().LastName, Is.EqualTo(lastName));
     }
 
     [Test]
     public void Update_WithChangedLastName_PersistsNewLastName()
     {
         // Arrange
-        // TODO: insert Customer + PhysicalCustomer, Get(customerId) to retrieve entity
+        var dto = UnitOfWork.PhysicalCustomerRepository.Get(2);
+        Assert.That(dto, Is.Not.Null);
+
+        dto!.LastName = "UpdatedLastName";
 
         // Act
-        // TODO: change LastName, call Update(dto)
+        UnitOfWork.PhysicalCustomerRepository.Update(dto);
 
         // Assert
-        // TODO: Get(customerId) and verify LastName equals the new value
-        Assert.Ignore("TODO: implement");
+        var updated = UnitOfWork.PhysicalCustomerRepository.Get(2);
+        Assert.That(updated, Is.Not.Null);
+        Assert.That(updated!.LastName, Is.EqualTo("UpdatedLastName"));
     }
 
     [Test]
     public void Delete_WithExistingCustomerId_RemovesPhysicalCustomerFromDatabase()
     {
         // Arrange
-        // TODO: insert Customer + PhysicalCustomer, capture customerId
+        const int customerId = 5;
 
         // Act
-        // TODO: call Delete(customerId)
+        UnitOfWork.PhysicalCustomerRepository.Delete(customerId);
 
         // Assert
-        // TODO: Get(customerId) and verify result is null
-        Assert.Ignore("TODO: implement");
+        var result = UnitOfWork.PhysicalCustomerRepository.Get(customerId);
+        Assert.That(result, Is.Null);
     }
 }

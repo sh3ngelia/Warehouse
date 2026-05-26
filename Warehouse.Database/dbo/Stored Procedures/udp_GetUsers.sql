@@ -1,12 +1,11 @@
 ﻿create procedure udp_GetUsers
-    @UserId int
+    @EmployeeId int
 as
 begin
     set nocount on;
 
-    select *
-    from Users
-    where EmployeeId = @UserId
-       and IsDeleted = 0;
-   
+select *
+from Users
+where EmployeeId = @EmployeeId
+  and IsDeleted = 0;
 end
